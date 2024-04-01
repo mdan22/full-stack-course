@@ -12,10 +12,18 @@ const calculateAverage = ({good, bad, all}) => {
 
 const calculatePositive = ({good, all}) => {
   if (all === 0) {return 0}
-  return (good / all)
+  return 100*(good / all)
 }
 
-const StatisticLine = ({text, value, etc}) => <p>{text} {value} {etc}</p>
+const StatisticLine = ({text, value, etc}) => {
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+      <td>{etc}</td>
+    </tr>
+  )
+}
 
 const Statistics = ({good, neutral, bad, all}) => {
   if (all === 0) {
@@ -26,14 +34,16 @@ const Statistics = ({good, neutral, bad, all}) => {
     )
   }
   return (
-    <div>
-    <StatisticLine text={"good"} value={good} />
-    <StatisticLine text={"neutral"} value ={neutral} />
-    <StatisticLine text={"bad"} value={bad} />
-    <StatisticLine text={"all"} value={all} />
-    <StatisticLine text={"average"} value={calculateAverage({good, bad, all})} />
-    <StatisticLine text={"positive"} value={calculatePositive({good, all})} etc={"%"} />
-  </div>
+    <table>
+      <tbody>
+        <StatisticLine text={"good"} value={good} />
+        <StatisticLine text={"neutral"} value ={neutral} />
+        <StatisticLine text={"bad"} value={bad} />
+        <StatisticLine text={"all"} value={all} />
+        <StatisticLine text={"average"} value={calculateAverage({good, bad, all})} />
+        <StatisticLine text={"positive"} value={calculatePositive({good, all})} etc={"%"} />
+      </tbody>
+    </table>
   )
 }
 
