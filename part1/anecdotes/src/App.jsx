@@ -4,13 +4,18 @@ const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
 const getRandomInt = (min, max) => {
   const randomNumber = Math.floor(Math.random() * (max-min)) + min
-  console.log(randomNumber)
   return randomNumber
 }
 
 const Anecdote = ({anecdotes, selected}) => (
   <div>
     {anecdotes[selected]}
+  </div>
+)
+
+const Counter = ({votes, selected}) => (
+  <div>
+    has {votes[selected]} votes
   </div>
 )
 
@@ -26,16 +31,29 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
 
+  const initialVotes = new Uint8Array(10); 
+
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(initialVotes)
+  
+  const onVote = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    console.log('clicked vote, vote count is now', copy[selected])
+    setVotes(copy)
+  }
   
   const onClick = () => {
-    console.log('clicked next anecdoted')
-    setSelected(getRandomInt(0, anecdotes.length))
+    const number = getRandomInt(0, anecdotes.length)
+    console.log('clicked next anecdote, load anecdote state', number)
+    setSelected(number)
   }
 
   return (
     <div>
       <Anecdote anecdotes={anecdotes} selected={selected} />
+      <Counter votes={votes} selected={selected} />
+      <Button onClick={onVote} text="vote" />
       <Button onClick={onClick} text="next anecdote" />
     </div>
   )
