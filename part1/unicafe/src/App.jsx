@@ -17,7 +17,7 @@ const calculatePositive = ({good, all}) => {
 
 const Variable = ({name, value, etc}) => <p>{name} {value} {etc}</p>
 
-const Content = ({good, neutral, bad, all}) => (
+const Statistics = ({good, neutral, bad, all}) => (
   <div>
     <Variable name={"good"} value={good} />
     <Variable name={"neutral"} value ={neutral} />
@@ -33,6 +33,8 @@ const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
+  // using all is not needed but this way we dont need
+  // to calculate the sum seperately -> better readability
   const [all, setAll] = useState(0)
 
   return (
@@ -45,7 +47,7 @@ const App = () => {
       
       {/* results: */}
       <Header text="statistics" />
-      <Content good={good} neutral={neutral} bad={bad} all={all} />
+      <Statistics good={good} neutral={neutral} bad={bad} all={all} />
     </div>
   )
 }
