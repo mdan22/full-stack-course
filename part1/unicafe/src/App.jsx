@@ -17,8 +17,16 @@ const calculatePositive = ({good, all}) => {
 
 const Variable = ({name, value, etc}) => <p>{name} {value} {etc}</p>
 
-const Statistics = ({good, neutral, bad, all}) => (
-  <div>
+const Statistics = ({good, neutral, bad, all}) => {
+  if (all === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+  return (
+    <div>
     <Variable name={"good"} value={good} />
     <Variable name={"neutral"} value ={neutral} />
     <Variable name={"bad"} value={bad} />
@@ -26,7 +34,8 @@ const Statistics = ({good, neutral, bad, all}) => (
     <Variable name={"average"} value={calculateAverage({good, bad, all})} />
     <Variable name={"positive"} value={calculatePositive({good, all})} etc={"%"} />
   </div>
-)
+  )
+}
 
 const App = () => {
   // save clicks of each button to its own state
