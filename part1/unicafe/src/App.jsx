@@ -15,7 +15,7 @@ const calculatePositive = ({good, all}) => {
   return (good / all)
 }
 
-const Variable = ({name, value, etc}) => <p>{name} {value} {etc}</p>
+const StatisticLine = ({text, value, etc}) => <p>{text} {value} {etc}</p>
 
 const Statistics = ({good, neutral, bad, all}) => {
   if (all === 0) {
@@ -27,12 +27,12 @@ const Statistics = ({good, neutral, bad, all}) => {
   }
   return (
     <div>
-    <Variable name={"good"} value={good} />
-    <Variable name={"neutral"} value ={neutral} />
-    <Variable name={"bad"} value={bad} />
-    <Variable name={"all"} value={all} />
-    <Variable name={"average"} value={calculateAverage({good, bad, all})} />
-    <Variable name={"positive"} value={calculatePositive({good, all})} etc={"%"} />
+    <StatisticLine text={"good"} value={good} />
+    <StatisticLine text={"neutral"} value ={neutral} />
+    <StatisticLine text={"bad"} value={bad} />
+    <StatisticLine text={"all"} value={all} />
+    <StatisticLine text={"average"} value={calculateAverage({good, bad, all})} />
+    <StatisticLine text={"positive"} value={calculatePositive({good, all})} etc={"%"} />
   </div>
   )
 }
