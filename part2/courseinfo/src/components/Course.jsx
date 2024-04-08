@@ -33,7 +33,7 @@ const sum = (array, property) => {
 
 const Course = ({course}) =>
   <>
-    <Header course={course.name}/>
+    <Header level={2} title={course.name}/>
     <Content parts={course.parts}/>
     <Total sum={sum(course.parts,'exercises')} />
   </>
