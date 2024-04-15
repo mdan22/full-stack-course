@@ -81,4 +81,7 @@ const App = ()  => {
   )
 }
 
+// 3 components were already extracted in part 2.9*:
+// Filter, PersonForm and Person
+
 export default App
