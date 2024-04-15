@@ -14,13 +14,22 @@ const App = ()  => {
     id: persons.length + 1,
   }
 
-
   // onSubmit - event handler
   // adds "nameObject"-entry to "persons"-list
   const addName = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
-    setPersons(persons.concat(nameObject))
+
+    // check if phonebook already includes newName
+    if(persons.some((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`) // we need to use backticks `
+      // the alternate Java-style approach would be:
+      // alert(newName + ' is already added to phonebook')
+    }
+    else {
+      setPersons(persons.concat(nameObject))
+    }
+    
     setNewName('') // reset string of form field
   }
 
