@@ -21,6 +21,7 @@ const App = ()  => {
   // the response is used to set persons (entries)
   useEffect((() => {
       console.log('effect')
+      // we now use personService.getAll() instead of axios.get
       personService
         .getAll()
         .then(initialPersons => {
@@ -97,7 +98,6 @@ const App = ()  => {
   )
 }
 
-// 3 components were already extracted in part 2.9*:
-// Filter, PersonForm and Person
-
 export default App
+
+// 2.13: the code that handles communication with the backend was already put into its own module in 2.12.
