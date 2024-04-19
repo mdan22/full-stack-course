@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
-import axios from 'axios'
 import personService from './services/persons'
 
 const App = ()  => {
@@ -43,7 +42,8 @@ const App = ()  => {
     const newEntry = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      // toString necessary bc deleting entries doesnt work otherwise
+      id: (persons.length + 1).toString(),
     }
 
     // here we could check if both a name and a number have been provided
@@ -86,6 +86,23 @@ const App = ()  => {
     return person.name.toLowerCase().includes(filterCriteria.toLowerCase())
   })
 
+  // event handler for deleting entry by id 
+  const handleDelete = (id) => {
+    console.log("Deleting person with id:", id);
+    const personToDelete = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToDelete.name} ?`)) {
+      personService.remove(id)
+        .then(() => {
+          console.log("Person deleted successfully");
+          setPersons(persons.filter(person => person.id !== id));
+        })
+        .catch(error => {
+          console.error('Error deleting entry:', error);
+        });
+    }
+  };
+
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -93,11 +110,9 @@ const App = ()  => {
       <h2>add a new</h2>
       <PersonForm onSubmit={addNameAndNumber} name={newName} number={newNumber} onChangeName={handleNameChange} onChangeNumber={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDelete={handleDelete} />
     </div>
   )
 }
 
 export default App
-
-// 2.13: the code that handles communication with the backend was already put into its own module in 2.12.
