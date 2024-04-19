@@ -3,6 +3,7 @@ import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import axios from 'axios'
+import personService from './services/persons'
 
 const App = ()  => {
 
@@ -20,40 +21,45 @@ const App = ()  => {
   // the response is used to set persons (entries)
   useEffect((() => {
       console.log('effect')
-      axios
-        .get('http://localhost:3001/persons')
-        .then(response => {
+      personService
+        .getAll()
+        .then(initialPersons => {
           console.log('promis fulfilled');
-          setPersons(response.data);
+          setPersons(initialPersons);
         })
     }
   ), []) // effect is only run along the 1st render of the component
 
   console.log('render', persons.length, 'notes')
 
-  // set the new entry object with name and later number
-  const newEntry = {
-    name: newName,
-    number: newNumber,
-    id: persons.length + 1,
-  }
-
   // onSubmit - event handler
   // adds "newEntry"-entry to "persons"-list
   const addNameAndNumber = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
+
+    // set the new entry object
+    const newEntry = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    }
+
     // here we could check if both a name and a number have been provided
     // check if phonebook already includes newName
     if(persons.some((person) => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`) // we need to use backticks `
+      alert(`'${newName}' is already added to phonebook`) // we need to use backticks `
     }
     // here we could check if number is already used in an else if statement
     else {
-      setPersons(persons.concat(newEntry))
+      personService.create(newEntry)
+        .then(returnedPersons => {
+          setPersons(persons.concat(returnedPersons))
+          // reset string of form fields:
+          setNewName('') 
+          setNewNumber('')
+        })
     }
-    setNewName('') // reset string of form field
-    setNewNumber('')
   }
 
   // onChange event handler for name
