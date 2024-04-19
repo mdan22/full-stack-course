@@ -24,7 +24,7 @@ const App = ()  => {
       personService
         .getAll()
         .then(initialPersons => {
-          console.log('promis fulfilled');
+          console.log('promise fulfilled');
           setPersons(initialPersons);
         })
     }
@@ -37,30 +37,39 @@ const App = ()  => {
   const addNameAndNumber = (event) => {
     event.preventDefault()
     console.log('button clicked', event.target)
+    // check if phonebook already includes newName
+    const existingPerson = persons.find(person => person.name === newName)
 
-    // set the new entry object
+    if(existingPerson) {
+      // If the person already exists, confirm if the number should be updated
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        // Create a new object with the updated numberL
+        const updatedPerson = { ...existingPerson, number: newNumber}
+        // Update the person on the server
+        personService.update(existingPerson.id, updatedPerson)
+        .then(returnedPerson => {
+          // Replace the old person with the updated one in the state
+          setPersons(persons.map((person) => person.id == existingPerson.id ? returnedPerson : person))
+        })
+      }
+    }
+    else {
+    // If the person doesn't exist, create a new entry
     const newEntry = {
       name: newName,
       number: newNumber,
       // toString necessary bc deleting entries doesnt work otherwise
       id: (persons.length + 1).toString(),
     }
-
-    // here we could check if both a name and a number have been provided
-    // check if phonebook already includes newName
-    if(persons.some((person) => person.name === newName)) {
-      alert(`'${newName}' is already added to phonebook`) // we need to use backticks `
+    personService.create(newEntry)
+      .then(returnedPersons => {
+        // Add the new person to the state
+        setPersons(persons.concat(returnedPersons))
+      })
     }
-    // here we could check if number is already used in an else if statement
-    else {
-      personService.create(newEntry)
-        .then(returnedPersons => {
-          setPersons(persons.concat(returnedPersons))
-          // reset string of form fields:
-          setNewName('') 
-          setNewNumber('')
-        })
-    }
+    // Reset the form fields (always)
+    setNewName('') 
+    setNewNumber('')
   }
 
   // onChange event handler for name
@@ -101,7 +110,6 @@ const App = ()  => {
         });
     }
   };
-
 
   return (
     <div>
