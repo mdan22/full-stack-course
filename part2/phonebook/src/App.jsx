@@ -37,11 +37,18 @@ const App = ()  => {
         personService.update(existingPerson.id, updatedPerson)
         .then(returnedPerson => {
           setPersons(persons.map((person) => person.id == existingPerson.id ? returnedPerson : person))
-          setErrorMessage(`Changed ${returnedPerson.name}'s number to ${returnedPerson.number}` )
+          setErrorMessage({message: `Changed ${returnedPerson.name}'s number to ${returnedPerson.number}`, type: 'success'})
           setTimeout(() => {
             setErrorMessage(null)
           }, 5000)
         })
+        .catch(error => {
+          setErrorMessage(
+            {message: `Information of ${existingPerson.name} has already been removed from server`, type: 'error'})
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        });
       }
     }
     else {
@@ -53,7 +60,7 @@ const App = ()  => {
     personService.create(newEntry)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setErrorMessage(`Added ${returnedPerson.name}` )
+        setErrorMessage({message: `Added ${returnedPerson.name}`, type: 'success'})
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
@@ -82,6 +89,7 @@ const App = ()  => {
     return person.name.toLowerCase().includes(filterCriteria.toLowerCase())
   })
 
+  // I also added a message for deleting an entry for cases 'success' and 'error':
   const handleDelete = (id) => {
     console.log("Deleting person with id:", id);
     const personToDelete = persons.find(person => person.id === id)
@@ -89,10 +97,17 @@ const App = ()  => {
       personService.remove(id)
         .then(() => {
           console.log("Person deleted successfully");
+          setErrorMessage({message: `Deleted ${personToDelete.name}`, type: 'success'})
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
           setPersons(persons.filter(person => person.id !== id));
         })
         .catch(error => {
-          console.error('Error deleting entry:', error);
+          setErrorMessage({ message: `Error deleting ${personToDelete.name}`, type: 'error' })
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         });
     }
   };
@@ -100,7 +115,7 @@ const App = ()  => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage ? errorMessage.message : null} type={errorMessage ? errorMessage.type : null} />
       <Filter value={filterCriteria} onChange={handleFilterChange}/>
       <h2>add a new</h2>
       <PersonForm onSubmit={addNameAndNumber} name={newName} number={newNumber} onChangeName={handleNameChange} onChangeNumber={handleNumberChange}/>
