@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import CountryDetails from './components/CountryDetails'
 
 const App = () => {
   const [value, setValue] = useState('')
   const [countries, setCountries] = useState([])
   const [showMessage, setShowMessage] = useState(false)
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
     // skip if value only contains spaces
@@ -39,6 +41,13 @@ const App = () => {
 
   const handleChange = (event) => {
     setValue(event.target.value)
+    setSelectedCountry(null)  // clear selected country when input changes
+  }
+
+  const handleClick = (country) => {
+    setSelectedCountry(country)
+    setValue(country.name.common)
+
   }
 
   return (
@@ -47,30 +56,16 @@ const App = () => {
         find countries <input value={value} onChange={handleChange} />
       </form>
       {showMessage && <p>Too many matches, specify another filter</p>}
-      {countries.length > 1 && countries.length < 11 && (
+      { !selectedCountry && countries.length > 1 && countries.length < 11 && (
         <ul>
           {countries.map(country => (
-            <li key={country.flag}>{country.name.common}</li>
+            <li key={country.flag}>{country.name.common}<button onClick={() => handleClick(country)}>show</button></li>
           ))}
         </ul>
       )
       }
-      {countries.length === 1 && (
-        <div>
-          <h1>{countries[0].name.common}</h1>
-          <ul>          
-            <li>capital {countries[0].capital}</li>
-            <li>area {countries[0].area}</li>
-          </ul>
-          <h2>languages:</h2>
-          <ul>          
-          {Object.keys(countries[0].languages).map(languageCode => (
-            <li key={languageCode}>{countries[0].languages[languageCode]}</li>
-          ))}
-          </ul>
-          <img src={countries[0].flags.png} alt={countries[0].flags.alt} />
-        </div>
-      )}
+      {selectedCountry && <CountryDetails country={selectedCountry} />}
+      {!selectedCountry && countries.length === 1 && <CountryDetails country={countries[0]} />}
     </div>
   )
 }
