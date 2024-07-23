@@ -1,5 +1,7 @@
 import axios from 'axios'
-// change the baseUrl to connect this frontend with the backend in ../full-stack-course-part3
+
+// we can declare baseUrl as a relative URL since both
+// the frontend and the backend are at the same address
 const baseUrl = 'http://localhost:3001/api/persons'
 
 const getAll = () => {
