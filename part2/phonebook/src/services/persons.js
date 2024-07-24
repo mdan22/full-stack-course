@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // we can declare baseUrl as a relative URL since both
 // the frontend and the backend are at the same address
-const baseUrl = 'http://localhost:3001/api/persons'
+const baseUrl = '/api/persons'
 
 const getAll = () => {
   const request = axios.get(baseUrl)
